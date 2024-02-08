@@ -1,28 +1,28 @@
-п»їusing System.Collections.Generic;
+using System.Collections.Generic;
 namespace NodeTreeLib;
 
-public class TreeNode<T>: ITreeNode<T>
+public class NodeTree<T>: INodeTree<T>
 {
     //private static int _nodecount = 0;
 
     private T _node_object;
     private int _layer;
-    private ITreeNode<T>? _parent;
-    private ICollection<ITreeNode<T>> _nodelist;
-    // Implementation of ITreeNode
-    public ITreeNode<T>? Parent { get => _parent; }
-    public ICollection<ITreeNode<T>> NodeList { get => _nodelist; }
+    private INodeTree<T>? _parent;
+    private ICollection<INodeTree<T>> _nodelist;
+    // Implementation of INodeTree
+    public INodeTree<T>? Parent { get => _parent; }
+    public ICollection<INodeTree<T>> NodeList { get => _nodelist; }
 
     public string Caption {get; set;}
     public override string ToString() => Caption;
 
-    public TreeNode() { }
+    public NodeTree() { }
 
-    public TreeNode(T obj)
+    public NodeTree(T obj)
     {
         _node_object = obj;
         Caption = obj.ToString();
-        _nodelist = new List<ITreeNode<T>>();
+        _nodelist = new List<INodeTree<T>>();
         _parent = null;
         _layer = 0;
     }
@@ -38,7 +38,7 @@ public class TreeNode<T>: ITreeNode<T>
         for (int j = 0; j < list.Count; j++)
         {
             int node_layer = list[j].GetNodeLayer();
-            /// TODO: СЂРµР°Р»РёР·РѕРІР°С‚СЊ РєРѕСЂСЂРµРєС‚РЅС‹Р№ РІС‹РІРѕРґ СЃ РѕС‚СЃС‚СѓРїР°РјРё РІ РєРѕРЅСЃРѕР»СЊ
+            /// TODO: Вынести печать в консоль в отдельный класс, реализовать вывод с отступами
         }
     }
     #endregion
@@ -50,7 +50,7 @@ public class TreeNode<T>: ITreeNode<T>
     {        
         if (obj == null || GetType() != obj.GetType()) return false;
         
-        if (obj is TreeNode<T> node) return Caption == node.Caption;
+        if (obj is NodeTree<T> node) return Caption == node.Caption;
         return false;
     }
     
@@ -58,7 +58,7 @@ public class TreeNode<T>: ITreeNode<T>
     public override int GetHashCode() => this.Caption.GetHashCode();
     #endregion
 
-    #region [..Interface ITreeNode<T> implementation]
+    #region [..Interface INodeTree<T> implementation]
     public int GetNodeLayer() => _layer;
 
     public void SetNodeLayer(int layer)
@@ -67,23 +67,24 @@ public class TreeNode<T>: ITreeNode<T>
         foreach(var n in _nodelist) n.SetNodeLayer(layer+1);
     }
 
-    public ITreeNode<T> GetParent() => _parent;
+    public INodeTree<T> GetParent() => _parent;
 
-    public void SetParent(ITreeNode<T> node)
+    public void SetParent(INodeTree<T> node)
     {
         this._parent = node;
         this._layer = node.GetNodeLayer() + 1;
     }
 
-    public ICollection<ITreeNode<T>> GetChildrenList() => _nodelist;
+    public ICollection<INodeTree<T>> GetChildrenList() => _nodelist;
 
-    public void AddNode(ITreeNode<T> node)
+    public void AddNode(INodeTree<T> node)
     {
         this._nodelist.Add(node);
        node.SetParent(this);
     }
     
-    public int FindNode(ITreeNode<T> node)
+    // метод не реализован
+    public int FindNode(INodeTree<T> node)
     {
         throw new System.NotImplementedException();      
     }
